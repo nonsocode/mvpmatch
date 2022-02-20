@@ -33,7 +33,7 @@ const ReportsContent = () => {
         (isAbsent(gatewayId) && !isAbsent(projectId)))
     )
   }, [gatewayId, projectId, reports.length])
-  if (isFetchingReports && reports.length === 0) return 'Loading...'
+  if (isFetchingReports && reports.length === 0) return <>'Loading...'</>
   if (reports.length === 0)
     return (
       <EmptyState

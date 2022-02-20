@@ -6,6 +6,7 @@ import AppLogo from './components/layout/AppLogo'
 import Content from './components/layout/Content'
 import Header from './components/layout/Header'
 import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
 
 const Layout = styled.div({
   display: 'grid',
@@ -35,6 +36,7 @@ const App = () => {
           <Header />
           <Navbar />
           <Content />
+          <Footer />
         </Layout>
       </BrowserRouter>
     </QueryClientProvider>

@@ -24,7 +24,7 @@ export type Project = {
   website: string
   description: string
   image: string
-}
+} & NamedEntity
 
 export type NamedEntity = {
   name: string
