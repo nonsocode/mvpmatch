@@ -24,13 +24,15 @@ export type Project = {
   website: string
   description: string
   image: string
+}
+
+export type NamedEntity = {
   name: string
 }
 
 export type LiteEntity = {
   id: string,
-  name: string,
-}
+} & NamedEntity
 
 export type ProjectsResponse = ApiResponse<Project>
 
@@ -46,12 +48,11 @@ export type UsersResponse = ApiResponse<User>
 export type Gateway = {
   gatewayId: string
   userIds: string[]
-  name: string
   type: string
   apiKey: string
   secondaryApiKey: string
   description: string
-}
+} & NamedEntity
 
 export type GatewaysResponse = ApiResponse<Gateway>
 

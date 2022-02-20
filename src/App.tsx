@@ -17,7 +17,13 @@ const Layout = styled.div({
   'nav    footer'    60px / 90px 1fr`,
 })
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+})
 const App = () => {
   const [count, setCount] = useState(0)
 

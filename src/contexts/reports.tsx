@@ -1,13 +1,28 @@
-import { createContext, PropsWithChildren, useContext, useReducer } from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useReducer,
+  useState,
+} from 'react'
+import { useQuery, useQueryClient } from 'react-query'
+import { generateReport } from 'src/api/actions'
+import type { Report } from 'src/types/api'
+import { ReportFilter } from 'src/types/reports'
 import { createReducer } from 'src/utils/reducers'
 
-type ReportContextData = {} & ReturnType<typeof useReportsFilter>
+type ReportContextData = {
+  reports: Report[]
+  isFetchingReports: boolean
+  commitFilters: () => void
+  committedFilters: ReportFilter
+} & ReturnType<typeof useReportsFilter>
 
-const initializeFilterState = () => ({
-  from: null as Date | null,
-  to: null as Date | null,
-  projectId: null as string | null,
-  gatewayId: null as string | null,
+const initializeFilterState = (): ReportFilter => ({
+  from: null,
+  to: null,
+  projectId: null,
+  gatewayId: null,
 })
 
 const Context = createContext<ReportContextData>(null as any)
@@ -32,11 +47,11 @@ const useReportsFilter = () => {
           ...state,
           projectId,
         }),
-        setGatewayId: (state, gatewayId) => ({
+        setGatewayId: (state, gatewayId: string) => ({
           ...state,
           gatewayId,
         }),
-        resetFilters: () => initializeFilterState(),
+        setFilters: (state, filters: ReportFilter) => filters,
       },
       initializeFilterState(),
     ),
@@ -49,13 +64,31 @@ const useReportsFilter = () => {
       dispatch({ type: 'setProjectId', payload: projectId }),
     setGatewayId: (gatewayId: string | null) =>
       dispatch({ type: 'setGatewayId', payload: gatewayId }),
-    reset: () => dispatch({ type: 'resetFilters', payload: null }),
+    reset: () =>
+      dispatch({ type: 'setFilters', payload: initializeFilterState() }),
   }
 }
-export const ReportsProvider = ({ children }: PropsWithChildren<{}>) => {
-  const reportsFilter = useReportsFilter()
+
+export const ReportsProvider = (props: PropsWithChildren<{}>) => {
+  const filterModule = useReportsFilter()
+  const [committedFilters, commitFilters] = useState(() => filterModule.filters)
+  const { data: reports, isFetching: isFetchingReports } = useQuery(
+    [committedFilters],
+    {
+      queryFn: ({ queryKey: [filters] }) => generateReport(filters),
+    },
+  )
 
   return (
-    <Context.Provider value={{ ...reportsFilter }}>{children}</Context.Provider>
+    <Context.Provider
+      {...props}
+      value={{
+        ...filterModule,
+        committedFilters,
+        commitFilters: () => commitFilters(filterModule.filters),
+        isFetchingReports,
+        reports: reports || [],
+      }}
+    />
   )
 }

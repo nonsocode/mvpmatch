@@ -1,12 +1,15 @@
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
 import { useQuery } from 'react-query'
-import { getGateways, getProjects } from 'src/api/index'
-import { Gateway, LiteEntity, Project } from 'src/api/types'
+import { getGateways, getProjects } from 'src/api/actions'
+import { Gateway, LiteEntity, Project } from 'src/types/api'
 import { useReportsContext } from 'src/contexts/reports'
 import Button from './Button'
 import DatePicker from './DatePicker'
 import Select from './Select'
+import { ALL_KEY } from 'src/constants/filters'
+import { useProjects } from 'src/contexts/projects'
+import { useGateways } from 'src/contexts/gateways'
 const FilterList = styled.ul({
   display: 'flex',
   gap: 23,
@@ -14,7 +17,6 @@ const FilterList = styled.ul({
   listStyle: 'none',
 })
 const FilterItem = styled.li({})
-const ALL_KEY = '__ALL__'
 
 const liteProject = ({ projectId: id, name }: Project): LiteEntity => ({
   id,
@@ -26,16 +28,12 @@ const liteGateway = ({ gatewayId: id, name }: Gateway): LiteEntity => ({
   name,
 })
 
-const renderEntity = (entity: LiteEntity) => entity.name
-const getEntityValue = (entity: LiteEntity) => entity.id 
+const getEntityValue = (entity: LiteEntity) => entity.id
 const ReportsFilters = () => {
-  const { filters, setDate, setGatewayId, setProjectId } = useReportsContext()
-  const { data: _projects } = useQuery('projects', {
-    queryFn: getProjects,
-  })
-  const { data: _gateways } = useQuery('gateways', {
-    queryFn: getGateways,
-  })
+  const { filters, setDate, setGatewayId, setProjectId, commitFilters } =
+    useReportsContext()
+  const { projects: _projects, getName: getProjectName } = useProjects()
+  const { gateways: _gateways, getName: getGatewayName } = useGateways()
   const { projects, currentProject } = useMemo(() => {
     const all = { id: ALL_KEY, name: 'All Projects' }
     const projects = [all, ...(_projects?.map(liteProject) || [])]
@@ -62,7 +60,7 @@ const ReportsFilters = () => {
           value={currentProject}
           onSelect={(item) => setProjectId(item?.id || null)}
           options={projects}
-          renderOption={renderEntity}
+          renderOption={(item) => getProjectName(item)!}
           getOptionValue={getEntityValue}
         />
       </FilterItem>
@@ -72,7 +70,7 @@ const ReportsFilters = () => {
           value={currentGateway}
           options={gateways}
           onSelect={(item) => setGatewayId(item?.id || null)}
-          renderOption={renderEntity}
+          renderOption={(item) => getGatewayName(item)!}
           getOptionValue={getEntityValue}
         />
       </FilterItem>
@@ -95,7 +93,7 @@ const ReportsFilters = () => {
         />
       </FilterItem>
       <FilterItem key={5}>
-        <Button>Generate report</Button>
+        <Button onClick={commitFilters}>Generate report</Button>
       </FilterItem>
     </FilterList>
   )
