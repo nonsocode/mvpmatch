@@ -1,5 +1,8 @@
 import { Report } from 'src/types/api'
 import { ReportGroup } from 'src/types/reports'
+import { stringToColour } from './hash'
+
+
 
 export const groupReports = <Id extends string>(
   reports: Report[],
@@ -14,7 +17,7 @@ export const groupReports = <Id extends string>(
       if (!group) {
         group = {
           total: 0,
-          color: 'black',
+          color: stringToColour(nameGetter(id)),
           name: nameGetter(id),
           chartName: altNameGetter?.(id),
           reports: [],
