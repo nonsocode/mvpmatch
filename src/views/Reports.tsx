@@ -1,20 +1,40 @@
 import styled from '@emotion/styled'
 import React from 'react'
+import Card from 'src/components/Card'
 import Heading from 'src/components/Heading'
+import ReportsFilters from 'src/components/ReportsFilters'
+import { ReportsProvider } from 'src/contexts/reports'
 
 const Wrapper = styled.div({
-  marginTop: 30
+  marginTop: 30,
+})
+const ReportsHeader = styled.div({
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+})
+
+const ReportsBody = styled.div({
+  marginTop: 20,
 })
 const Reports = () => {
   return (
-    <Wrapper>
-      <div>
-        <Heading size="h3">Reports</Heading>
-        <Heading size="h4" muted>
-          Easily generate a report of your transactions
-        </Heading>
-      </div>
-    </Wrapper>
+    <ReportsProvider>
+      <Wrapper>
+        <ReportsHeader>
+          <div>
+            <Heading size="h3">Reports</Heading>
+            <Heading size="h5" muted>
+              Easily generate a report of your transactions
+            </Heading>
+          </div>
+          <ReportsFilters />
+        </ReportsHeader>
+        <ReportsBody>
+          <Card variant="light"></Card>
+        </ReportsBody>
+      </Wrapper>
+    </ReportsProvider>
   )
 }
-export default React.memo(Reports)
+export default Reports

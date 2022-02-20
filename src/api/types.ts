@@ -14,7 +14,7 @@ export type ApiResponse<Data, Code = ResponseCode> = {
   ? { data: Data[]; error: null }
   : { data: null; error: any })
 
-export type ProjectsResponse = ApiResponse<{
+export type Project = {
   projectId: string
   userIds: string[]
   rule: string
@@ -25,16 +25,25 @@ export type ProjectsResponse = ApiResponse<{
   description: string
   image: string
   name: string
-}>
+}
 
-export type UsersResponse = ApiResponse<{
+export type LiteEntity = {
+  id: string,
+  name: string,
+}
+
+export type ProjectsResponse = ApiResponse<Project>
+
+type User = {
   userId: string
   firstName: string
   lastName: string
   email: string
-}>
+}
 
-export type GatewaysResponse = ApiResponse<{
+export type UsersResponse = ApiResponse<User>
+
+export type Gateway = {
   gatewayId: string
   userIds: string[]
   name: string
@@ -42,9 +51,11 @@ export type GatewaysResponse = ApiResponse<{
   apiKey: string
   secondaryApiKey: string
   description: string
-}>
+}
 
-export type ReportsResponse = ApiResponse<{
+export type GatewaysResponse = ApiResponse<Gateway>
+
+export type Report = {
   paymentId: string
   amount: number
   projectId: string
@@ -52,4 +63,6 @@ export type ReportsResponse = ApiResponse<{
   userIds: string[]
   modified: DateString
   created: DateString
-}>
+}
+
+export type ReportsResponse = ApiResponse<Report>
