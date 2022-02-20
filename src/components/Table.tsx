@@ -25,7 +25,7 @@ const Body = styled.tbody({
   '& tr td': {
     background: Colors.TERTIARY,
   },
-  '& tr:nth-child(odd) td': {
+  '& tr:nth-of-type(2n + 1) td': {
     background: Colors.SECONDARY_LIGHT,
   },
 })
@@ -54,7 +54,7 @@ const Table = <T,>({ columns, rows, stickyHeader = true }: TableProps<T>) => {
       <Head sticky={stickyHeader}>
         <tr>
           {columns.map((col) => (
-            <Th align={col.alignment} key={col.title}>
+            <Th align={col.alignment || 'left'} key={col.title}>
               {col.title}
             </Th>
           ))}
@@ -64,7 +64,7 @@ const Table = <T,>({ columns, rows, stickyHeader = true }: TableProps<T>) => {
         {rows.map((row, i) => (
           <tr key={i}>
             {columns.map((col) => (
-              <Td align={col.alignment} key={col.title}>
+              <Td align={col.alignment || 'left'} key={col.title}>
                 {col.get(row)}
               </Td>
             ))}

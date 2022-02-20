@@ -11,7 +11,7 @@ export function getEntityName<
   finder: F,
   allFallback: string = 'All',
 ): E extends NamedEntity ? string : Nullish<string> {
-  if (item === null) return null
+  if (item === null) return null as any
   if (typeof item !== 'string') return item.name
   if (item === ALL_KEY) return allFallback
   return finder(item)?.name || ''

@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { Icon } from 'src/types/icon'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { FourSquares, Graph, Pie, Power, Screen } from '../icons'
+import { Colors } from 'src/types/colors'
 const Ul = styled.ul({
   padding: 0,
   listStyle: 'none',
@@ -12,7 +13,8 @@ const Ul = styled.ul({
   rowGap: 25,
 })
 const Nav = styled.nav({
-  gridArea: 'nav'
+  gridArea: 'nav',
+  background: Colors.TERTIARY
 })
 const Li = styled.li({})
 type NavItemkProps = {

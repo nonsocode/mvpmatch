@@ -4,12 +4,15 @@ import { ALL_KEY } from 'src/constants/filters'
 import { useGateways } from 'src/contexts/gateways'
 import { useProjects } from 'src/contexts/projects'
 import { useReportsContext } from 'src/contexts/reports'
+import { useReportGrouping } from 'src/hooks/useReportGrouping'
 import { ReportGroup } from 'src/types/reports'
 import { groupReports } from 'src/utils/grouper'
 import { formatMoney } from 'src/utils/money'
+import { isAbsent } from 'src/utils/reports'
 import Accordion from './Accordion'
 import Card from './Card'
 import LineCard from './LineCard'
+import { ReportCharts } from './ReportCharts'
 import ReportsTable from './ReportsTable'
 import Text from './Text'
 
@@ -20,57 +23,40 @@ const StyledContent = styled.div({
 const ReportsContent = () => {
   const {
     isFetchingReports,
-    reports: { length },
+    committedFilters: { projectId, gatewayId },
+    reports,
   } = useReportsContext()
-  if (isFetchingReports && length === 0) return 'Loading...'
-  if (length === 0) return 'No Content'
+  const showChartContent = useMemo(() => {
+    return (
+      reports.length &&
+      ((isAbsent(projectId) && !isAbsent(gatewayId)) ||
+        (isAbsent(gatewayId) && !isAbsent(projectId)))
+    )
+  }, [gatewayId, projectId, reports.length])
+  if (isFetchingReports && reports.length === 0) return 'Loading...'
+  if (reports.length === 0) return 'No Content'
   return (
     <>
       <StyledContent>
         <ReportCards />
-        <ReportCharts />
+        {showChartContent && <ReportCharts />}
       </StyledContent>
     </>
   )
 }
 
 const StyledReportCard = styled.div({
-  flex: 1,
+  flex: 1.2,
 })
-const isAbsent = (item: any) => [ALL_KEY, null].includes(item)
 
 const ReportCards = () => {
   const {
-    isFetchingReports,
     committedFilters: { projectId, gatewayId },
     reports,
   } = useReportsContext()
   const { getName: getProjectName } = useProjects()
-  const { getName: getGatewayName, findById: findGateway } = useGateways()
-  if (isFetchingReports) return null
-  const names = [
-    getProjectName(projectId) || 'All Projects',
-    getGatewayName(gatewayId) || 'All Gateways',
-  ].join(' | ')
-  const groupedReports = useMemo(() => {
-    switch (true) {
-      case isAbsent(projectId) && !isAbsent(gatewayId):
-      case isAbsent(projectId) && isAbsent(gatewayId):
-        return groupReports(
-          reports,
-          (report) => report.projectId,
-          (id) => getProjectName(id),
-        )
-      case isAbsent(gatewayId) && !isAbsent(projectId):
-        return groupReports(
-          reports,
-          (report) => report.gatewayId,
-          (id) => getGatewayName(id),
-          (id) => findGateway(id).type,
-        )
-    }
-    return null
-  }, [projectId, gatewayId])
+  const { getName: getGatewayName } = useGateways()
+  const groupedReports = useReportGrouping(projectId, gatewayId, reports)
 
   const showBottomTotal = useMemo(
     () =>
@@ -82,7 +68,8 @@ const ReportCards = () => {
     <StyledReportCard>
       <Card variant="light" padding={19}>
         <Text bold margin={'0 0 30px'}>
-          {names}
+          {getProjectName(projectId) || 'All Projects'} |{' '}
+          {getGatewayName(gatewayId) || 'All Gateways'}
         </Text>
         {groupedReports ? (
           <Accordion gap={5}>
@@ -120,11 +107,6 @@ const ReportCards = () => {
       )}
     </StyledReportCard>
   )
-}
-
-const ReportCharts = () => {
-  const {} = useReportsContext()
-  return <></>
 }
 
 export default ReportsContent

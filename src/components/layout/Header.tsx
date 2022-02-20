@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import { Colors } from 'src/types/colors'
 import Avatar from '../Avatar'
 import Container from '../Container'
 import { Hamburger } from '../icons'
@@ -12,6 +13,7 @@ const HeaderContainer = styled(Container)({
 const Wrapper = styled.div({
   gridArea: 'header',
   borderBottom: '2px solid #F3F6F9',
+  background: Colors.TERTIARY
 })
 const UserInfoContainer = styled.div({
   display: 'inline-flex',
