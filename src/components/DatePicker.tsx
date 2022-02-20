@@ -3,6 +3,7 @@ import { useState } from 'react'
 import DP from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { IconSize } from 'src/types/icon'
+import { dashYMD } from 'src/utils/date'
 import { Calendar } from './icons'
 type DatePickerProps = {
   value: Date | null
@@ -32,23 +33,13 @@ const CalendarIcon = styled(Calendar)({
   transform: 'translateY(-50%)',
 })
 
-const dateFormatter = new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: '2-digit',
-  day: '2-digit',
-})
 
-const defaultDateFormatter = (date: Date) => {
-  const parts = Object.fromEntries(
-    dateFormatter.formatToParts(date).map(({ type, value }) => [type, value]),
-  )
-  return `${parts.year}-${parts.month}-${parts.day}`
-}
+
 const DatePicker = ({
   value,
   label,
   onChange,
-  formatter = defaultDateFormatter,
+  formatter = dashYMD,
 }: DatePickerProps) => {
   return (
     <DP
@@ -59,7 +50,7 @@ const DatePicker = ({
         <DatePickerButton>
           <ValueWrapper>
 
-          {value ? defaultDateFormatter(value) : label}{' '}
+          {value ? formatter(value) : label}{' '}
           </ValueWrapper>
           <CalendarIcon size={IconSize.SMALL} />
         </DatePickerButton>

@@ -29,7 +29,7 @@ export const getGateways = () =>
   client.get<GatewaysResponse>('gateways').then(dataGetter)
 
 export const generateReport = (filter: ReportFilter): Promise<Report[]> => {
-  if (Object.values(filter).every(isNullish)) Promise.resolve([])
+  if (Object.values(filter).every(isNullish)) return Promise.resolve([])
   return client
     .post<ReportsResponse>('report', filter, {
       transformRequest: [

@@ -5,7 +5,7 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
-  useRef,
+  useState,
 } from 'react'
 import Collapsible from 'react-collapsible'
 import { useId } from 'src/hooks/useId'
@@ -43,16 +43,29 @@ const Accordion = ({
   gap,
   defaultState = false,
 }: PropsWithChildren<AccordionProps>) => {
-  const itemsOpenState = useRef<{ [k: string]: boolean }>({})
+  const [state, setState] = useState<{ [k: string]: boolean }>({})
   const register = (id: number) => {
-    itemsOpenState.current[id] = itemsOpenState.current[id] ?? defaultState
+    setState((state) => ({
+      ...state,
+      [id]: state[id] ?? defaultState,
+    }))
   }
   const unregister = (id: number) => {
-    delete itemsOpenState.current[id]
+    setState((state) => {
+      state = { ...state }
+      delete state[id]
+      return state
+    })
   }
-  const isOpen = (id: number) => itemsOpenState.current[id]
-  const toggle = (id: number) =>
-    (itemsOpenState.current[id] = !itemsOpenState.current[id])
+  const isOpen = (id: number) => !!state[id]
+  const toggle = (id: number) => {
+    setState((state) => {
+      return {
+        ...state,
+        [id]: !state[id],
+      }
+    })
+  }
   return (
     <Context.Provider value={{ register, unregister, isOpen, toggle }}>
       <StyledAccordion gap={gap}>{children}</StyledAccordion>
@@ -76,6 +89,7 @@ const AccordionItem = ({
       trigger={trigger}
       children={children}
       open={isOpen(id)}
+      transitionTime={200}
       handleTriggerClick={() => {
         toggle(id)
       }}
