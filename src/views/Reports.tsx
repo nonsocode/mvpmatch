@@ -8,17 +8,17 @@ import { ProjectsProvider } from 'src/contexts/projects'
 import { ReportsProvider } from 'src/contexts/reports'
 
 const Wrapper = styled.div({
-  marginTop: 30,
+  display: 'flex',
+  flexDirection: 'column',
+  minHeight: '100%',
 })
 const ReportsHeader = styled.div({
+  paddingTop: 30,
   display: 'flex',
   alignItems: 'flex-start',
   justifyContent: 'space-between',
 })
 
-const ReportsBody = styled.div({
-  marginTop: 20,
-})
 const Reports = () => {
   return (
     <ReportsProvider>
@@ -34,9 +34,7 @@ const Reports = () => {
               </div>
               <ReportsFilters />
             </ReportsHeader>
-            <ReportsBody>
-              <ReportsContent />
-            </ReportsBody>
+            <ReportsContent />
           </Wrapper>
         </ProjectsProvider>
       </GatewaysProvider>

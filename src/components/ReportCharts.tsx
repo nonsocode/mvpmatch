@@ -16,7 +16,9 @@ const Wrapper = styled.div({
   justifyContent: 'space-between',
 })
 const ChartWrapper = styled.div({
-  margin: '30px 0',
+  margin: '20px 0',
+  display: 'grid',
+  placeContent: 'center'
 })
 type LabelProps = {
   color: string
@@ -60,7 +62,6 @@ export const ReportCharts = () => {
     groupedReports?.map((group) => ({
       title: group.chartName || group.name,
       value: (group.total / total) * 100,
-      label: (group.total / total) * 100 + '%',
       color: group.color as string,
     })) || []
 
@@ -75,7 +76,24 @@ export const ReportCharts = () => {
         ))}
       </LineCard>
       <ChartWrapper>
-        <PieChart lineWidth={45} data={pieData} radius={50}/>
+        <PieChart
+          lineWidth={45}
+          data={pieData}
+          radius={50}
+          label={({ dataEntry: { percentage } }) =>
+            `${Math.round(percentage)}%`
+          }
+          labelPosition={75}
+          segmentsShift={.2}
+          style={{
+            // height: '50%',
+          }}
+          labelStyle={{
+            fill: '#fff',
+            fontSize: '6px',
+            pointerEvents: 'none',
+          }}
+        />
       </ChartWrapper>
       <LineCard variant="light">
         <Text bold>

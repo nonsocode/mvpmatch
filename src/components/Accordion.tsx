@@ -72,7 +72,7 @@ const Accordion = ({
     </Context.Provider>
   )
 }
-
+const Pointable = styled.div({cursor: 'pointer'})
 const AccordionItem = ({
   trigger,
   children,
@@ -86,7 +86,7 @@ const AccordionItem = ({
 
   return (
     <Collapsible
-      trigger={trigger}
+      trigger={<Pointable>{trigger}</Pointable>}
       children={children}
       open={isOpen(id)}
       transitionTime={200}

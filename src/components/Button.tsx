@@ -8,6 +8,7 @@ const StyledButton = styled.button({
   border: 'none',
   background: '#005B96',
   borderRadius: 5,
+  cursor: "pointer",
   padding: '8px 10px',
   color: 'white',
 })

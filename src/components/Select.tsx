@@ -15,6 +15,7 @@ type SelectOptions<T> = {
 const stringify = (item: any) => String(item)
 const Icon = styled(CaretDown)({
   position: 'absolute',
+  pointerEvents: 'none',
   right: 13,
   top: '50%',
   transform: 'translateY(-40%)',

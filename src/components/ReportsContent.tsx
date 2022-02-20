@@ -1,24 +1,24 @@
 import styled from '@emotion/styled'
 import { useMemo } from 'react'
-import { ALL_KEY } from 'src/constants/filters'
 import { useGateways } from 'src/contexts/gateways'
 import { useProjects } from 'src/contexts/projects'
 import { useReportsContext } from 'src/contexts/reports'
 import { useReportGrouping } from 'src/hooks/useReportGrouping'
-import { ReportGroup } from 'src/types/reports'
-import { groupReports } from 'src/utils/grouper'
 import { formatMoney } from 'src/utils/money'
 import { isAbsent } from 'src/utils/reports'
 import Accordion from './Accordion'
 import Card from './Card'
+import { EmptyState } from './EmptyState'
 import LineCard from './LineCard'
 import { ReportCharts } from './ReportCharts'
 import ReportsTable from './ReportsTable'
 import Text from './Text'
+import EmptyStateImage from '../assets/img/EmptyState.svg'
 
 const StyledContent = styled.div({
   display: 'flex',
   gap: 30,
+  marginTop: 20,
 })
 const ReportsContent = () => {
   const {
@@ -34,7 +34,16 @@ const ReportsContent = () => {
     )
   }, [gatewayId, projectId, reports.length])
   if (isFetchingReports && reports.length === 0) return 'Loading...'
-  if (reports.length === 0) return 'No Content'
+  if (reports.length === 0)
+    return (
+      <EmptyState
+        title="No Reports"
+        subtitle="Currently you have no data for the reports to be generated.
+  Once you start generating traffic through the Balance application 
+  the reports will be shown."
+        image={EmptyStateImage}
+      />
+    )
   return (
     <>
       <StyledContent>

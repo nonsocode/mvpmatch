@@ -17,7 +17,7 @@ export const groupReports = <Id extends string>(
       if (!group) {
         group = {
           total: 0,
-          color: stringToColour(nameGetter(id)),
+          color: stringToColour(id),
           name: nameGetter(id),
           chartName: altNameGetter?.(id),
           reports: [],
