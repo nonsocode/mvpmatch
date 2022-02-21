@@ -5,6 +5,7 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import Collapsible from 'react-collapsible'
@@ -19,6 +20,7 @@ type AccordionContext = {
 type AccordionProps = {
   defaultState?: boolean
   gap?: CSSProperties['gap']
+  multiple?: boolean
 }
 type AccorionItemProps = {
   trigger: JSX.Element
@@ -42,6 +44,7 @@ const Accordion = ({
   children,
   gap,
   defaultState = false,
+  multiple = false,
 }: PropsWithChildren<AccordionProps>) => {
   const [state, setState] = useState<{ [k: string]: boolean }>({})
   const register = (id: number) => {
@@ -61,7 +64,7 @@ const Accordion = ({
   const toggle = (id: number) => {
     setState((state) => {
       return {
-        ...state,
+        ...(multiple ? state : null),
         [id]: !state[id],
       }
     })
@@ -72,7 +75,7 @@ const Accordion = ({
     </Context.Provider>
   )
 }
-const Pointable = styled.div({cursor: 'pointer'})
+const Pointable = styled.div({ cursor: 'pointer' })
 const AccordionItem = ({
   trigger,
   children,

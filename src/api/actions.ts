@@ -6,6 +6,7 @@ import {
   ProjectsResponse,
   Report,
   ReportsResponse,
+  UsersResponse,
 } from '../types/api'
 import { ReportFilter } from 'src/types/reports'
 import { isNullish } from 'src/utils/presense'
@@ -15,19 +16,20 @@ const dataGetter = <T>(res: AxiosResponse<ApiResponse<T>>) => {
   if (!res.data.data) throw new Error(res.data.error)
   return res.data.data
 }
-
 const getDefaultTransformers = (): AxiosRequestTransformer[] =>
   axios.defaults.transformRequest
     ? isArray(axios.defaults.transformRequest)
       ? axios.defaults.transformRequest
       : [axios.defaults.transformRequest]
     : []
+
 export const getProjects = () =>
   client.get<ProjectsResponse>('projects').then(dataGetter)
 
 export const getGateways = () =>
   client.get<GatewaysResponse>('gateways').then(dataGetter)
 
+export const getUsers = () => client.get<UsersResponse>('users').then(dataGetter)
 export const generateReport = (filter: ReportFilter): Promise<Report[]> => {
   if (Object.values(filter).every(isNullish)) return Promise.resolve([])
   return client
